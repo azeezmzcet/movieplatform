@@ -1,61 +1,121 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { useState } from 'react';
-import { authLogin } from './Authentication';
-import {useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { authLogin } from "./Authentication";
+import { useNavigate } from "react-router-dom";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 
 export const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await authLogin(email,password);
-      console.log('success', response.data);
-    
-
+      const response = await authLogin(email, password);
+      console.log("success", response.data);
+      localStorage.setItem("Token", response.data.tokenNmae);
+      console.log("login local");
+      alert(["successfully login"]);
+      navigate("/");
     } catch (error: unknown) {
-      console.log('error failed', error);
-      
+      console.log("error failed", error);
+      alert("email & password is incorrect");
     }
   };
 
+  const handleHome = () => {
+    navigate("/");
+  };
+
   return (
-    <div>
-      <Box>
-        <h1><b>Login</b></h1>
-        <br />
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          width: { xs: "90%", sm: "70%", md: "40%" },
+          padding: { xs: "20px", md: "40px" },
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          borderRadius: "8px",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Grid item xs={12} textAlign="center">
+          <Typography
+            variant="h4"
+            component="h1"
+            fontWeight="bold"
+            color="black"
+          >
+            Login
+          </Typography>
+        </Grid>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br />
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </Grid>
 
-        <Button variant="contained" color="success"onClick={handleLogin}>
-          Login
-        </Button>
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Password"
+            type="password"
+            variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </Grid>
 
-        <div>
-          Not a Member?{' '}
-          <span style={{ color: 'blue', cursor: 'pointer' }}  onClick={()=>navigate('/register')}>
-            Signup
-          </span>
-        </div>
-      </Box>
-    </div>
+        <Grid item xs={12} textAlign="center">
+          <Button
+            fullWidth
+            variant="contained"
+            color="success"
+            onClick={handleLogin}
+            sx={{ mb: 2 }}
+          >
+            Login
+          </Button>
+
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={handleHome}
+          >
+            Home
+          </Button>
+        </Grid>
+
+        <Grid item xs={12} textAlign="center">
+          <Typography style={{ color: "black" }}>
+            Not a Member?{" "}
+            <span
+              style={{ color: "blue", cursor: "pointer" }}
+              onClick={() => navigate("/register")}
+            >
+              Signup
+            </span>
+          </Typography>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
-
 export default Login;

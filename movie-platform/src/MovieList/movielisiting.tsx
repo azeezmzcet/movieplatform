@@ -1,88 +1,232 @@
-import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+  IconButton,
+  Box,
+  Grid,
+  Typography,
+} from "@mui/material";
+import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 
 interface Movies {
   id?: number;
-  title?:string;
+  title?: string;
   director?: string;
   hero?: string;
-  herione?: string |null;
-  music_director?: string |null;
-  rating?: string |null;
-  story?: string |null;
+  herione?: string | null;
+  music_director?: string | null;
+  rating?: string | null;
+  story?: string | null;
 }
 
 const Movielisting: React.FC = () => {
-console.log("herhre")
-
-const {id} = useParams();
-
-console.log("id-found", id)
-
+  const { id } = useParams();
   const [movies, setMovies] = useState<Movies>({});
-//   const [edit,setEdit] =useState<string>('false')
-//   const navigate =useNavigate();
-
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [editData, setEditData] = useState<Movies>({});
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/movieslisting/${id}`);
-        console.log('lising', response);
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/movieslisting/${id}`
+        );
         setMovies(response.data);
-        // return response.data;
-       
-        
       } catch (error) {
-        console.log('Failed to fetch movies',error);
-       
-      } 
+        console.log("Failed to fetch movies", error);
+      }
     };
 
     fetchMovies();
+
+    const loggedIn = localStorage.getItem("Token");
+    if (loggedIn) {
+      setIsLoggedIn(true);
+    }
   }, [id]);
 
+  const handleDelete = () => {
+    if (isLoggedIn) {
+      axios
+        .delete(`http://127.0.0.1:8000/api/movieslisting/${id}`)
+        .then(() => {
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log("Failed to delete", err);
+        });
+    }
+  };
 
-//   const handleEdit =async ()=>{
-//     try{
-//         const response = await axios.put(`http://127.0.0.1:8000/api/movieslisting/${id}`);
-//         setEdit('true');
-//         console.log('handle edit workinng');
-//         return response;
-        
-//     }catch{
-//         console.log('error edit')
-//     }
-   
-//   }
+  const handleEditOpen = () => {
+    if (isLoggedIn) {
+      setEditData(movies);
+      setModalOpen(true);
+    }
+  };
 
+  const handleClose = () => {
+    setModalOpen(false);
+  };
 
+  const handleEditSave = async () => {
+    try {
+      await axios.put(
+        `http://127.0.0.1:8000/api/movieslisting/${id}`,
+        editData
+      );
+      setMovies(editData);
+      setModalOpen(false);
+    } catch (error) {
+      console.log("Failed to update movie", error);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditData({ ...editData, [e.target.name]: e.target.value });
+  };
+
+  const handleBackk = () => {
+    navigate("/");
+  };
 
   if (Object.keys(movies).length === 0) return <div>Loading...</div>;
 
   return (
-    <>
-    <h1>Movie Listing</h1>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h4" textAlign="center" mb={2}>
+        Movie Listing
+      </Typography>
 
-    <div className='container'>
-      
-      <div className='list'>
-          <div className='a' style={{flex: "1",margin: "15px",padding: "40px", border: "2px solid #ccc",}}>
-            <h2 >{movies.title}</h2>
-            <h2>{movies.director}</h2>
-            <h2>{movies.hero}</h2>
-            <h2>{movies.herione}</h2>
-            <h2>{movies.music_director}</h2>
-            <h2>{movies.rating}</h2>
-            <h5>{movies.story}</h5>
-          </div>
-      </div>
-    </div>
-       
-    </>
+      <IconButton
+        sx={{
+          position: "relative",
+          bottom: "50px",
+          color: "white",
+          right: "40%",
+        }}
+        onClick={handleBackk}
+      >
+        <ArrowBackIosOutlinedIcon />
+      </IconButton>
+
+      <Grid item xs={12} sm={10} md={8}>
+        <Box
+          sx={{
+            p: 8,
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            backgroundColor: "black",
+            mb: 2,
+            width: "450px",
+          }}
+        >  
+          <Typography variant="h6">Title:   <span style={{color:'blue'}}>{movies.title}</span></Typography>
+          <Typography variant="h6">Director:  <span style={{color:'blue'}}> {movies.director}</span></Typography>
+          <Typography variant="h6">Hero:   <span style={{color:'blue'}}> {movies.hero}</span></Typography>
+          <Typography variant="h6">Heroine:   <span style={{color:'blue'}}> {movies.herione}</span></Typography>
+          <Typography variant="h6">
+            Music Director:  <span style={{color:'blue'}}> {movies.music_director}</span>
+          </Typography>
+          <Typography variant="h6">Rating:  <span style={{color:'blue'}}> {movies.rating}/100 </span></Typography>
+          <Typography variant="body1">Story:   <span style={{color:'blue'}}> {movies.story}</span></Typography>
+        </Box>
+      </Grid>
+
+      {isLoggedIn && (
+        <Grid item xs={12} sm={10} md={8}>
+          <Button
+            onClick={handleEditOpen}
+            variant="contained"
+            color="primary"
+            sx={{ mr: 2 }}
+          >
+            Edit
+          </Button>
+          <Button onClick={handleDelete} variant="contained" color="secondary">
+            Delete
+          </Button>
+        </Grid>
+      )}
+
+      <Dialog open={modalOpen} onClose={handleClose} fullWidth>
+        <DialogTitle>Edit Movie</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            name="title"
+            label="Title"
+            fullWidth
+            value={editData.title || ""}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="director"
+            label="Director"
+            fullWidth
+            value={editData.director || ""}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="hero"
+            label="Hero"
+            fullWidth
+            value={editData.hero || ""}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="herione"
+            label="Heroine"
+            fullWidth
+            value={editData.herione || ""}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="music_director"
+            label="Music Director"
+            fullWidth
+            value={editData.music_director || ""}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="rating"
+            label="Rating"
+            fullWidth
+            value={editData.rating || ""}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="story"
+            label="Story"
+            fullWidth
+            value={editData.story || ""}
+            onChange={handleChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleEditSave} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 
