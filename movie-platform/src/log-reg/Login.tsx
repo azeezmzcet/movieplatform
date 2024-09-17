@@ -16,6 +16,14 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+
+    const newErrors = {
+      email: !email,
+      password: !password,
+    };
+    setErrors(newErrors);
+
+    
     try {
       const response = await authLogin(email, password);
       // console.log("success", response.data);
@@ -42,6 +50,15 @@ export const Login: React.FC = () => {
     setOpen(false);
     setErrorOpen(false);
   }
+
+
+
+
+
+  const [errors, setErrors] = useState({
+    email: false,
+    password:false,
+  });
 
   return (
     <Box
@@ -83,6 +100,8 @@ export const Login: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            error={errors.email}
+            helperText={errors.email ? "EMAIL is required" : ""}
           />
         </Grid>
 
@@ -95,6 +114,8 @@ export const Login: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            error={errors.password}
+            helperText={errors.password ? "password is required" : ""}
           />
         </Grid>
 

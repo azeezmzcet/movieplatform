@@ -15,7 +15,24 @@ export const Signup: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    password: false,
+    c_password: false,
+  });
+
   const handleRegister = async () => {
+
+    const newErrors = {
+      name: !name,
+      email: !email,
+      password: !password,
+      c_password: !c_password,
+    };
+
+    setErrors(newErrors);
+
     try {
       const response = await authRegister(name, email, password, c_password);
       // console.log("success", response.data);
@@ -77,6 +94,8 @@ export const Signup: React.FC = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            error={errors.name}
+            helperText={errors.name ? "Name is required" : ""}
           />
         </Grid>
 
@@ -89,6 +108,8 @@ export const Signup: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            error={errors.email}
+            helperText={errors.email ? "Email is required ,it should be in (name@_mail.com)" : ""}
           />
         </Grid>
 
@@ -101,6 +122,8 @@ export const Signup: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            error={errors.password}
+            helperText={errors.password ? "password is required" : ""}
           />
         </Grid>
 
@@ -113,6 +136,8 @@ export const Signup: React.FC = () => {
             value={c_password}
             onChange={(e) => setC_password(e.target.value)}
             required
+            error={errors.c_password}
+            helperText={errors.c_password ? " Make please to write comfirm password" : ""}
           />
         </Grid>
 
