@@ -22,6 +22,7 @@ const Movielist: React.FC = () => {
   const [moviesPerPage] = useState<number>(9);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
+
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -68,6 +69,7 @@ const Movielist: React.FC = () => {
       navigate("/login");
     }
   };
+
 
 
 
@@ -184,6 +186,9 @@ const Movielist: React.FC = () => {
           color="primary"
         />
       </Stack>
+
+
+     
     </div>
   );
 };

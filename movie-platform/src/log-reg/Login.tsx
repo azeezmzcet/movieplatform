@@ -1,31 +1,47 @@
 import { useState } from "react";
 import { authLogin } from "./Authentication";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box,Grid, Button, TextField, Typography ,Snackbar,Alert } from "@mui/material";
+
+
+
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const [open,setOpen] = useState<boolean>(false);
+  const [openError,setErrorOpen] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const response = await authLogin(email, password);
-      console.log("success", response.data);
+      // console.log("success", response.data);
       localStorage.setItem("Token", response.data.tokenNmae);
-      console.log("login local");
-      alert(["successfully login"]);
-      navigate("/");
+      // console.log("login local");
+      
+      setOpen(true);
+      setTimeout(()=>{
+        navigate('/');
+      },1500);
+     
     } catch (error: unknown) {
       console.log("error failed", error);
-      alert("email & password is incorrect");
+      setErrorOpen(true);
     }
   };
 
   const handleHome = () => {
     navigate("/");
   };
+
+
+  const handleCloseSnackbar=()=>{
+    setOpen(false);
+    setErrorOpen(false);
+  }
 
   return (
     <Box
@@ -82,6 +98,9 @@ export const Login: React.FC = () => {
           />
         </Grid>
 
+
+
+
         <Grid item xs={12} textAlign="center">
           <Button
             fullWidth
@@ -92,6 +111,9 @@ export const Login: React.FC = () => {
           >
             Login
           </Button>
+
+
+
 
           <Button
             fullWidth
@@ -115,6 +137,15 @@ export const Login: React.FC = () => {
           </Typography>
         </Grid>
       </Grid>
+
+
+
+      <Snackbar open={open}  onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar}  severity="success" >  Successfully sign in!</Alert>
+      </Snackbar>
+      <Snackbar open={openError}  onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar}  severity="error" >  oops something went wrong</Alert>
+      </Snackbar>
     </Box>
   );
 };

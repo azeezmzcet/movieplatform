@@ -3,7 +3,8 @@ import axios from "axios";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
-import { Grid, TextField, Button, IconButton, Typography } from "@mui/material";
+import {  TextField, Button, IconButton, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid';
 
 
 export default function NewMovie() {
@@ -11,13 +12,30 @@ export default function NewMovie() {
   const [director, setDirector] = useState<string>("");
   const [hero, setHero] = useState<string>("");
   const [herione, setHerione] = useState<string>("");
-  const [music_director, setMusicDirector] = useState<string>("");
+  const [music_director, setMusic_director] = useState<string>("");
   const [rating, setRating] = useState<string>("");
   const [story, setStory] = useState<string>("");
+
+  const [errors, setErrors] = useState({
+    title: false,
+    director: false,
+    hero: false,
+    rating: false,
+  });
 
   const navigate = useNavigate();
 
   const handleMovieList = async () => {
+
+    const newErrors = {
+      title: !title,
+      director: !director,
+      hero: !hero,
+      rating: !rating || isNaN(Number(rating)) || Number(rating) < 0 || Number(rating) > 100,
+    };
+
+    setErrors(newErrors);
+
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/movieslisting",
@@ -26,7 +44,7 @@ export default function NewMovie() {
           director,
           hero,
           herione,
-          music_director,
+          music_director: music_director,
           rating,
           story,
         }
@@ -42,9 +60,7 @@ export default function NewMovie() {
     navigate("/");
   };
 
-
   
-
   return (
     <div style={{ position: "relative", padding: "0px", width: "820px" }}>
       <IconButton
@@ -62,7 +78,7 @@ export default function NewMovie() {
         New Movie
       </Typography>
 
-      <div style={{ backgroundColor:' #543d46',  borderRadius:'2px' , border: "5px solid white", }}>
+      <div style={{ backgroundColor:'white',  borderRadius:'5px' , border: "15px solid #543d46", }}>
         
           <Grid item xs={12} sm={6} p={1}>
             <TextField 
@@ -70,10 +86,15 @@ export default function NewMovie() {
               label="Movie Name"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+        
+              required
+              error={errors.title}
+              helperText={errors.title ? "Movie Name is required" : ""}
+
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }
@@ -86,11 +107,14 @@ export default function NewMovie() {
               label="Director"
               value={director}
               onChange={(e) => setDirector(e.target.value)}
+              required
+              error={errors.director}
+              helperText={errors.director ? "Director is required" : ""}
 
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }
@@ -103,11 +127,14 @@ export default function NewMovie() {
               label="Hero"
               value={hero}
               onChange={(e) => setHero(e.target.value)}
+              required
+              error={errors.hero}
+              helperText={errors.hero ? "Hero is required" : ""}
 
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }
@@ -120,11 +147,11 @@ export default function NewMovie() {
               label="Heroine"
               value={herione}
               onChange={(e) => setHerione(e.target.value)}
-
+             
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }
@@ -138,11 +165,11 @@ export default function NewMovie() {
               fullWidth
               label="Music Director"
               value={music_director}
-              onChange={(e) => setMusicDirector(e.target.value)}
+              onChange={(e) => setMusic_director(e.target.value)}
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }
@@ -158,7 +185,7 @@ export default function NewMovie() {
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }
@@ -174,7 +201,7 @@ export default function NewMovie() {
               sx={{
                
                 "& .MuiOutlinedInput-root": {
-                  color: "white",
+                  color: "black",
                   fontFamily: "Arial",
                   fontWeight: "bold"
               }

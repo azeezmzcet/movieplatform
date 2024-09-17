@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, TextField, Typography,Snackbar,Alert } from "@mui/material";
 import { useState } from "react";
 import { authRegister } from "./Authentication";
 import { useNavigate } from "react-router-dom";
@@ -10,19 +10,31 @@ export const Signup: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [c_password, setC_password] = useState<string>("");
 
+  const [open,setOpen] = useState<boolean>(false);
+
+
   const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
       const response = await authRegister(name, email, password, c_password);
-      console.log("success", response.data);
+      // console.log("success", response.data);
       localStorage.setItem("Token", response.data.tokenNmae);
-      console.log("signup local");
-      navigate('/');
+      // console.log("signup local");
+      setOpen(true);
+      setTimeout(()=>{
+        navigate('/');
+      },1500);
     } catch (error: unknown) {
       console.log("error failed", error);
+     
     }
   };
+
+  const handleCloseSnackbar=()=>{
+    setOpen(false);
+   
+  }
 
   return (
     <Box
@@ -128,6 +140,10 @@ export const Signup: React.FC = () => {
           </Typography>
         </Grid>
       </Grid>
+
+      <Snackbar open={open}  onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar}  severity="success" >  Successfully logged in!</Alert>
+      </Snackbar>
     </Box>
   );
 };

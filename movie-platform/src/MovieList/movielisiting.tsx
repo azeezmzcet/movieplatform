@@ -189,7 +189,7 @@ const Movielisting: React.FC = () => {
           <TextField
             margin="dense"
             name="herione"
-            label="Heroine"
+            label="Herione"
             fullWidth
             value={editData.herione || ""}
             onChange={handleChange}
