@@ -22,7 +22,6 @@ const Movielist: React.FC = () => {
   const [moviesPerPage] = useState<number>(9);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -64,14 +63,11 @@ const Movielist: React.FC = () => {
   const handleLogin = () => {
     if (isLoggedIn) {
       setIsLoggedIn(false);
-      localStorage.clear()
+      localStorage.clear();
     } else {
       navigate("/login");
     }
   };
-
-
-
 
   return (
     <div style={{ maxWidth: "800px" }}>
@@ -186,9 +182,6 @@ const Movielist: React.FC = () => {
           color="primary"
         />
       </Stack>
-
-
-     
     </div>
   );
 };

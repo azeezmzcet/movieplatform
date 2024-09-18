@@ -11,9 +11,10 @@ import {
   TextField,
   IconButton,
   Box,
-  Grid,
   Typography,
 } from "@mui/material";
+
+import Grid from '@mui/material/Grid2';
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 
 interface Movies {
@@ -120,7 +121,7 @@ const Movielisting: React.FC = () => {
         <ArrowBackIosOutlinedIcon />
       </IconButton>
 
-      <Grid item xs={12} sm={10} md={8}>
+      <Grid size={{xs:12,sm:10,md:8}} >
         <Box
           sx={{
             p: 8,
@@ -144,7 +145,7 @@ const Movielisting: React.FC = () => {
       </Grid>
 
       {isLoggedIn && (
-        <Grid item xs={12} sm={10} md={8}>
+        <Grid size={{xs:12,sm:10,md:8}}>
           <Button
             onClick={handleEditOpen}
             variant="contained"

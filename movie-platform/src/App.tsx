@@ -6,7 +6,7 @@ import Login from "./log-reg/Login";
 import Movielist from "./MovieList/movielist";
 import NewMovie from "./MovieList/newMovie";
 import Movielisting from "./MovieList/movielisiting";
-import MovielisitngUpdate from "./MovieList/movielisitngUpdate";
+
 
 function App() {
   return (
@@ -16,7 +16,6 @@ function App() {
           <Route path="/" element={<Movielist />} />
           <Route path="/new-movie" element={<NewMovie />} />
           <Route path="/new-movie/:id" element={<Movielisting />} />
-          <Route path="/new-movieUpdate/:id" element={<MovielisitngUpdate />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Signup />} />
         </Routes>

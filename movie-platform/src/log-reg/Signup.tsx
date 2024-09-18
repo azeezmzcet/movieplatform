@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
-import { Button, Grid, TextField, Typography,Snackbar,Alert } from "@mui/material";
+import { Button, TextField, Typography,Snackbar,Alert } from "@mui/material";
 import { useState } from "react";
 import { authRegister } from "./Authentication";
 import { useNavigate } from "react-router-dom";
+import Grid from '@mui/material/Grid2';
 
 export const Signup: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -15,6 +16,8 @@ export const Signup: React.FC = () => {
 
   const navigate = useNavigate();
 
+
+
   const [errors, setErrors] = useState({
     name: false,
     email: false,
@@ -22,17 +25,60 @@ export const Signup: React.FC = () => {
     c_password: false,
   });
 
+  const handleName =(e: React.ChangeEvent<HTMLInputElement>)=>{
+    setName(e.target.value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+    name: !e.target.value,
+  }));
+  };
+  const handleEmail =(e: React.ChangeEvent<HTMLInputElement>)=>{
+
+    setEmail(e.target.value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+    
+    email: !/\S+@\S+\.\S+/.test(e.target.value),
+
+  }));
+  };
+  const handlePassword =(e: React.ChangeEvent<HTMLInputElement>)=>{
+   
+    setPassword(e.target.value);
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+  
+    password: !e.target.value || e.target.value.length < 6
+
+  }));
+  };
+  const handleCpassword =(e: React.ChangeEvent<HTMLInputElement>)=>{
+   
+    setC_password(e.target.value);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+    
+   
+    c_password: password !== e.target.value,
+  }));
+  };
+
+
+
+
   const handleRegister = async () => {
 
     const newErrors = {
       name: !name,
       email: !email,
       password: !password,
-      c_password: !c_password,
+      c_password: password !== c_password,
     };
 
     setErrors(newErrors);
 
+     if(!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password)
     try {
       const response = await authRegister(name, email, password, c_password);
       // console.log("success", response.data);
@@ -47,6 +93,10 @@ export const Signup: React.FC = () => {
      
     }
   };
+
+  
+
+
 
   const handleCloseSnackbar=()=>{
     setOpen(false);
@@ -74,7 +124,7 @@ export const Signup: React.FC = () => {
           backgroundColor: "white",
         }}
       >
-        <Grid item xs={12} textAlign="center">
+        <Grid size={{xs:12}}  textAlign="center">
           <Typography
             variant="h4"
             component="h1"
@@ -85,63 +135,63 @@ export const Signup: React.FC = () => {
           </Typography>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{xs:12}}>
           <TextField
             fullWidth
             label="Name"
             type="text"
             variant="outlined"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={ handleName }
             required
             error={errors.name}
             helperText={errors.name ? "Name is required" : ""}
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{xs:12}}>
           <TextField
             fullWidth
             label="Email"
             type="email"
             variant="outlined"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={ handleEmail }
             required
             error={errors.email}
             helperText={errors.email ? "Email is required ,it should be in (name@_mail.com)" : ""}
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{xs:12}}>
           <TextField
             fullWidth
             label="Password"
             type="password"
             variant="outlined"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={ handlePassword }
             required
             error={errors.password}
-            helperText={errors.password ? "password is required" : ""}
+            helperText={errors.password ?"Password must be at least 6 characters long" : ""}
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{xs:12}}>
           <TextField
             fullWidth
             label="Confirm Password"
             type="password"
             variant="outlined"
             value={c_password}
-            onChange={(e) => setC_password(e.target.value)}
+            onChange={ handleCpassword }
             required
             error={errors.c_password}
-            helperText={errors.c_password ? " Make please to write comfirm password" : ""}
+            helperText={errors.c_password ?"Passwords do not match" : ""}
           />
         </Grid>
 
-        <Grid item xs={12} textAlign="center">
+        <Grid size={{xs:12}} textAlign="center">
           <Button
             fullWidth
             variant="contained"
@@ -153,7 +203,7 @@ export const Signup: React.FC = () => {
           </Button>
         </Grid>
 
-        <Grid item xs={12} textAlign="center">
+        <Grid size={{xs:12}} textAlign="center">
           <Typography color="black">
             Already have an account?{" "}
             <span
@@ -166,7 +216,7 @@ export const Signup: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Snackbar open={open}  onClose={handleCloseSnackbar}>
+      <Snackbar open={open}  onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
         <Alert onClose={handleCloseSnackbar}  severity="success" >  Successfully logged in!</Alert>
       </Snackbar>
     </Box>

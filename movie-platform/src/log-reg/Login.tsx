@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { authLogin } from "./Authentication";
 import { useNavigate } from "react-router-dom";
-import { Box,Grid, Button, TextField, Typography ,Snackbar,Alert } from "@mui/material";
+import { Box, Button, TextField, Typography ,Snackbar,Alert } from "@mui/material";
+import Grid from '@mui/material/Grid2';
+
 
 
 
@@ -13,17 +15,46 @@ export const Login: React.FC = () => {
   const [open,setOpen] = useState<boolean>(false);
   const [openError,setErrorOpen] = useState<boolean>(false);
 
+  const [emailedit,setEmailedit] =useState<string>('');
+  const [passwordedit,setPasswordedit] =useState<string>('');
+
   const navigate = useNavigate();
+
+
+
+
+
+  const validateEmail=(email:string)=>{
+    if(!email){
+      setEmailedit('email is required');
+    }else if (!/\S+@\S+\.\S+/.test(email)){
+      setEmailedit('Write Correct Email formate');
+    }else{
+      setEmailedit('');
+    }
+  };
+
+
+  const validatePassword=(password :string)=>{
+    if(!password){
+      setPasswordedit('email is required');
+    }
+    else if (password.length <6) {
+      setPasswordedit("Password must be at least 6 characters");
+    }else{
+      setPasswordedit('');
+    
+    }   
+
+  }
+
 
   const handleLogin = async () => {
 
-    const newErrors = {
-      email: !email,
-      password: !password,
-    };
-    setErrors(newErrors);
-
+      validateEmail(email);
+      validatePassword(password);
     
+      if(!emailedit && !passwordedit)
     try {
       const response = await authLogin(email, password);
       // console.log("success", response.data);
@@ -33,7 +64,7 @@ export const Login: React.FC = () => {
       setOpen(true);
       setTimeout(()=>{
         navigate('/');
-      },1500);
+      },3000);
      
     } catch (error: unknown) {
       console.log("error failed", error);
@@ -49,16 +80,18 @@ export const Login: React.FC = () => {
   const handleCloseSnackbar=()=>{
     setOpen(false);
     setErrorOpen(false);
+    
   }
+  
 
 
 
 
 
-  const [errors, setErrors] = useState({
-    email: false,
-    password:false,
-  });
+  // const [errors, setErrors] = useState({
+  //   email: false,
+  //   password:false,
+  // });
 
   return (
     <Box
@@ -80,7 +113,7 @@ export const Login: React.FC = () => {
           backgroundColor: "#fff",
         }}
       >
-        <Grid item xs={12} textAlign="center">
+        <Grid size={{xs:12}}   textAlign="center">
           <Typography
             variant="h4"
             component="h1"
@@ -91,38 +124,38 @@ export const Login: React.FC = () => {
           </Typography>
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{xs:12}} >
           <TextField
             fullWidth
             label="Email"
             type="email"
             variant="outlined"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {setEmail(e.target.value);  validateEmail(e.target.value)}}
             required
-            error={errors.email}
-            helperText={errors.email ? "EMAIL is required" : ""}
+            error={!!emailedit}
+            helperText={emailedit}
           />
         </Grid>
 
-        <Grid item xs={12}>
+        <Grid size={{xs:12}} >
           <TextField
             fullWidth
             label="Password"
             type="password"
             variant="outlined"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) =>{setPassword(e.target.value); validatePassword(e.target.value)}}
             required
-            error={errors.password}
-            helperText={errors.password ? "password is required" : ""}
+            error={!!passwordedit}
+            helperText={passwordedit}
           />
         </Grid>
 
 
 
 
-        <Grid item xs={12} textAlign="center">
+        <Grid size={{xs:12}}  textAlign="center">
           <Button
             fullWidth
             variant="contained"
@@ -146,7 +179,7 @@ export const Login: React.FC = () => {
           </Button>
         </Grid>
 
-        <Grid item xs={12} textAlign="center">
+        <Grid size={{xs:12}}  textAlign="center">
           <Typography style={{ color: "black" }}>
             Not a Member?{" "}
             <span
@@ -161,10 +194,10 @@ export const Login: React.FC = () => {
 
 
 
-      <Snackbar open={open}  onClose={handleCloseSnackbar}>
-        <Alert onClose={handleCloseSnackbar}  severity="success" >  Successfully sign in!</Alert>
+      <Snackbar    open={open}  onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "top", horizontal: "center" }}  autoHideDuration={3000}  >
+        <Alert onClose={handleCloseSnackbar}  severity="success"    >  Successfully sign in!</Alert>
       </Snackbar>
-      <Snackbar open={openError}  onClose={handleCloseSnackbar}>
+      <Snackbar open={openError}  onClose={handleCloseSnackbar}  anchorOrigin={{ vertical: "top", horizontal: "center"}} autoHideDuration={3000}>
         <Alert onClose={handleCloseSnackbar}  severity="error" >  oops something went wrong</Alert>
       </Snackbar>
     </Box>
