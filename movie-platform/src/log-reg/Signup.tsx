@@ -1,9 +1,14 @@
 import Box from "@mui/material/Box";
 import { Button, TextField, Typography,Snackbar,Alert } from "@mui/material";
 import { useState } from "react";
-import { authRegister } from "./Authentication";
+
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid2';
+ import axios from "axios";
+
+// import { useDispatch } from 'react-redux';
+// import { signupRequest } from '../redux/authSlices';
+
 
 export const Signup: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -12,9 +17,11 @@ export const Signup: React.FC = () => {
   const [c_password, setC_password] = useState<string>("");
 
   const [open,setOpen] = useState<boolean>(false);
+  // const [openError, setErrorOpen] = useState<boolean>(false);
 
 
   const navigate = useNavigate();
+  //const dispatch=useDispatch();
 
 
 
@@ -80,10 +87,10 @@ export const Signup: React.FC = () => {
 
      if(!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password)
     try {
-      const response = await authRegister(name, email, password, c_password);
-      // console.log("success", response.data);
-      localStorage.setItem("Token", response.data.tokenNmae);
-      // console.log("signup local");
+      const response = await axios.post('http://127.0.0.1:8000/api/register',{name, email, password, c_password});
+      //console.log("success", response.data);
+      localStorage.setItem("Token",response.data.tokenNmae);
+       console.log("signup local");
       setOpen(true);
       setTimeout(()=>{
         navigate('/');
@@ -93,6 +100,26 @@ export const Signup: React.FC = () => {
      
     }
   };
+
+  
+  // const handleRegister = () => {
+  //   const newErrors = {
+  //     name: !name,
+  //     email: !email,
+  //     password: !password,
+  //     c_password: password !== c_password,
+  //   };
+  
+  //   setErrors(newErrors);
+  //   if (!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password) {
+  //     dispatch(signupRequest({ name, email, password, c_password }));
+  //     setOpen(true);
+  //     setTimeout(()=>{
+  //       navigate('/');
+  //     },1500);
+  //   }
+  // };
+
 
   
 

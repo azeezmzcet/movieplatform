@@ -1,97 +1,108 @@
 import { useState } from "react";
-import { authLogin } from "./Authentication";
+ import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, TextField, Typography ,Snackbar,Alert } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 
 
 
+//import { useDispatch } from 'react-redux';
+//import {  loginRequest } from '../redux/authSlices';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const [open,setOpen] = useState<boolean>(false);
-  const [openError,setErrorOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openError, setErrorOpen] = useState<boolean>(false);
 
-  const [emailedit,setEmailedit] =useState<string>('');
-  const [passwordedit,setPasswordedit] =useState<string>('');
+  const [emailedit, setEmailedit] = useState<string>("");
+  const [passwordedit, setPasswordedit] = useState<string>("");
 
   const navigate = useNavigate();
+  //const dispatch=useDispatch();
 
-
-
-
-
-  const validateEmail=(email:string)=>{
-    if(!email){
-      setEmailedit('email is required');
-    }else if (!/\S+@\S+\.\S+/.test(email)){
-      setEmailedit('Write Correct Email formate');
-    }else{
-      setEmailedit('');
+  const validateEmail = (email: string) => {
+    if (!email) {
+      setEmailedit("email is required");
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailedit("Write Correct Email formate");
+    } else {
+      setEmailedit("");
     }
   };
 
-
-  const validatePassword=(password :string)=>{
-    if(!password){
-      setPasswordedit('email is required');
-    }
-    else if (password.length <6) {
+  const validatePassword = (password: string) => {
+    if (!password) {
+      setPasswordedit("email is required");
+    } else if (password.length < 6) {
       setPasswordedit("Password must be at least 6 characters");
-    }else{
-      setPasswordedit('');
-    
-    }   
+    } else {
+      setPasswordedit("");
+    }
+  };
 
-  }
+  // const handleLogin = () => {
+  //   validateEmail(email);
+  //   validatePassword(password);
+  //   if (!emailedit && !passwordedit) {
+  //     dispatch(loginRequest({ email, password }));
+  //     // localStorage.setItem("Token", Response.data.tokenNmae);
+  //     setOpen(true);
+  //     setTimeout(() => {
+  //       navigate("/");
+  //     }, 3000);
+  //   }else{
+  //     // console.log("error failed", error);
+  //     setErrorOpen(true);
+
+  //   }
+  // };
+
 
 
   const handleLogin = async () => {
+    validateEmail(email);
+    validatePassword(password);
 
-      validateEmail(email);
-      validatePassword(password);
-    
-      if(!emailedit && !passwordedit)
-    try {
-      const response = await authLogin(email, password);
-      // console.log("success", response.data);
-      localStorage.setItem("Token", response.data.tokenNmae);
-      // console.log("login local");
-      
-      setOpen(true);
-      setTimeout(()=>{
-        navigate('/');
-      },3000);
-     
-    } catch (error: unknown) {
-      console.log("error failed", error);
-      setErrorOpen(true);
-    }
+    if (!emailedit && !passwordedit)
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/login', {email, password});
+        // console.log("success", response.data);
+        localStorage.setItem("Token", response.data.tokenNmae);
+        // console.log("login local");
+
+        setOpen(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+      } catch (error: unknown) {
+        console.log("error failed", error);
+        setErrorOpen(true);
+      }
   };
+
+
+
+
 
   const handleHome = () => {
     navigate("/");
   };
 
-
-  const handleCloseSnackbar=()=>{
+  const handleCloseSnackbar = () => {
     setOpen(false);
     setErrorOpen(false);
-    
-  }
-  
+  };
 
-
-
-
-
-  // const [errors, setErrors] = useState({
-  //   email: false,
-  //   password:false,
-  // });
 
   return (
     <Box
@@ -113,7 +124,7 @@ export const Login: React.FC = () => {
           backgroundColor: "#fff",
         }}
       >
-        <Grid size={{xs:12}}   textAlign="center">
+        <Grid size={{ xs: 12 }} textAlign="center">
           <Typography
             variant="h4"
             component="h1"
@@ -124,38 +135,41 @@ export const Login: React.FC = () => {
           </Typography>
         </Grid>
 
-        <Grid size={{xs:12}} >
+        <Grid size={{ xs: 12 }}>
           <TextField
             fullWidth
             label="Email"
             type="email"
             variant="outlined"
             value={email}
-            onChange={(e) => {setEmail(e.target.value);  validateEmail(e.target.value)}}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value);
+            }}
             required
             error={!!emailedit}
             helperText={emailedit}
           />
         </Grid>
 
-        <Grid size={{xs:12}} >
+        <Grid size={{ xs: 12 }}>
           <TextField
             fullWidth
             label="Password"
             type="password"
             variant="outlined"
             value={password}
-            onChange={(e) =>{setPassword(e.target.value); validatePassword(e.target.value)}}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              validatePassword(e.target.value);
+            }}
             required
             error={!!passwordedit}
             helperText={passwordedit}
           />
         </Grid>
 
-
-
-
-        <Grid size={{xs:12}}  textAlign="center">
+        <Grid size={{ xs: 12 }} textAlign="center">
           <Button
             fullWidth
             variant="contained"
@@ -165,9 +179,6 @@ export const Login: React.FC = () => {
           >
             Login
           </Button>
-
-
-
 
           <Button
             fullWidth
@@ -179,7 +190,7 @@ export const Login: React.FC = () => {
           </Button>
         </Grid>
 
-        <Grid size={{xs:12}}  textAlign="center">
+        <Grid size={{ xs: 12 }} textAlign="center">
           <Typography style={{ color: "black" }}>
             Not a Member?{" "}
             <span
@@ -192,13 +203,27 @@ export const Login: React.FC = () => {
         </Grid>
       </Grid>
 
-
-
-      <Snackbar    open={open}  onClose={handleCloseSnackbar} anchorOrigin={{ vertical: "top", horizontal: "center" }}  autoHideDuration={3000}  >
-        <Alert onClose={handleCloseSnackbar}  severity="success"    >  Successfully sign in!</Alert>
+      <Snackbar
+        open={open}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={3000}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success">
+          {" "}
+          Successfully sign in!
+        </Alert>
       </Snackbar>
-      <Snackbar open={openError}  onClose={handleCloseSnackbar}  anchorOrigin={{ vertical: "top", horizontal: "center"}} autoHideDuration={3000}>
-        <Alert onClose={handleCloseSnackbar}  severity="error" >  oops something went wrong</Alert>
+      <Snackbar
+        open={openError}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={3000}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="error">
+          {" "}
+          oops something went wrong
+        </Alert>
       </Snackbar>
     </Box>
   );
