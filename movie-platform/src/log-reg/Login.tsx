@@ -50,45 +50,45 @@ export const Login: React.FC = () => {
     }
   };
 
-  // const handleLogin = () => {
-  //   validateEmail(email);
-  //   validatePassword(password);
-  //   if (!emailedit && !passwordedit) {
-  //     dispatch(loginRequest({ email, password }));
-  //     // localStorage.setItem("Token", Response.data.tokenNmae);
-  //     setOpen(true);
-  //     setTimeout(() => {
-  //       navigate("/");
-  //     }, 3000);
-  //   }else{
-  //     // console.log("error failed", error);
-  //     setErrorOpen(true);
-
-  //   }
-  // };
-
-
-
-  const handleLogin = async () => {
+  const handleLogin = () => {
     validateEmail(email);
     validatePassword(password);
+    if (!emailedit && !passwordedit) {
+      dispatch(loginRequest({ email, password }));
+      // localStorage.setItem("Token", Response.data.tokenNmae);
+      setOpen(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    }else{
+      // console.log("error failed", error);
+      setErrorOpen(true);
 
-    if (!emailedit && !passwordedit)
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/login', {email, password});
-        // console.log("success", response.data);
-        localStorage.setItem("Token", response.data.tokenNmae);
-        // console.log("login local");
-
-        setOpen(true);
-        setTimeout(() => {
-          navigate("/");
-        }, 3000);
-      } catch (error: unknown) {
-        console.log("error failed", error);
-        setErrorOpen(true);
-      }
+    }
   };
+
+
+
+  // const handleLogin = async () => {
+  //   validateEmail(email);
+  //   validatePassword(password);
+
+  //   if (!emailedit && !passwordedit)
+  //     try {
+  //       const response = await axios.post('http://127.0.0.1:8000/api/login', {email, password});
+  //        console.log("success", response.data);
+  //       localStorage.setItem("Token", response.data.tokenNmae);
+  //        console.log("login local");
+
+  //       setOpen(true);
+  //       setTimeout(() => {
+  //         navigate("/");
+  //       }, 3000);
+  //     } catch (error: unknown) {
+  //       console.log("error failed", error);
+  //       setErrorOpen(true);
+  //     }
+  // };
 
 
 

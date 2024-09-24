@@ -1,13 +1,17 @@
 import Box from "@mui/material/Box";
 import { Button, TextField, Typography,Snackbar,Alert } from "@mui/material";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid2';
- import axios from "axios";
 
-// import { useDispatch } from 'react-redux';
+
+ import { useDispatch, useSelector } from 'react-redux';
 // import { signupRequest } from '../redux/authSlices';
+import { signupRequest } from "../redux/authSlice";
+import { RootState } from "../redux/store";
+import axios from "axios";
+
 
 
 export const Signup: React.FC = () => {
@@ -17,11 +21,12 @@ export const Signup: React.FC = () => {
   const [c_password, setC_password] = useState<string>("");
 
   const [open,setOpen] = useState<boolean>(false);
-  // const [openError, setErrorOpen] = useState<boolean>(false);
+  const [openError, setErrorOpen] = useState<boolean>(false);
 
 
   const navigate = useNavigate();
-  //const dispatch=useDispatch();
+  const dispatch=useDispatch();
+  const { loading, error, Token } = useSelector((state: RootState) => state.auth);
 
 
 
@@ -72,10 +77,10 @@ export const Signup: React.FC = () => {
   };
 
 
+ 
 
-
+  
   const handleRegister = async () => {
-
     const newErrors = {
       name: !name,
       email: !email,
@@ -83,42 +88,30 @@ export const Signup: React.FC = () => {
       c_password: password !== c_password,
     };
 
-    setErrors(newErrors);
+     setErrors(newErrors);
+    // dispatch(signupRequest({ name, email, password, c_password }));
+    // setOpen(true);
+    //    setTimeout(()=>{
+    //      navigate('/');
+    //    },1500);
 
-     if(!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password)
-    try {
-      const response = await axios.post('http://127.0.0.1:8000/api/register',{name, email, password, c_password});
-      //console.log("success", response.data);
-      localStorage.setItem("Token",response.data.tokenNmae);
-       console.log("signup local");
-      setOpen(true);
-      setTimeout(()=>{
-        navigate('/');
-      },1500);
-    } catch (error: unknown) {
-      console.log("error failed", error);
+     if(!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password){
+      //localStorage.setItem("Token",response.data.tokenNmae);
+      dispatch(signupRequest({ name, email, password, c_password }));
+     console.log("signup local");
+    setOpen(true);
+    setTimeout(()=>{
+      dispatch(signupRequest({ name, email, password, c_password }));
+      navigate('/');
+    },1500);
      
-    }
-  };
+     }else{
+      console.log("error failed")
 
-  
-  // const handleRegister = () => {
-  //   const newErrors = {
-  //     name: !name,
-  //     email: !email,
-  //     password: !password,
-  //     c_password: password !== c_password,
-  //   };
-  
-  //   setErrors(newErrors);
-  //   if (!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password) {
-  //     dispatch(signupRequest({ name, email, password, c_password }));
-  //     setOpen(true);
-  //     setTimeout(()=>{
-  //       navigate('/');
-  //     },1500);
-  //   }
-  // };
+      
+      
+     }
+    }
 
 
   
@@ -129,6 +122,9 @@ export const Signup: React.FC = () => {
     setOpen(false);
    
   }
+
+
+
 
   return (
     <Box
@@ -249,5 +245,6 @@ export const Signup: React.FC = () => {
     </Box>
   );
 };
+
 
 export default Signup;

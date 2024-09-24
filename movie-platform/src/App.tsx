@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 import Signup from "./log-reg/Signup";
-import Login from "./log-reg/Login";
+import {Login} from "./log-reg/Login";
 import Movielist from "./MovieList/movielist";
 import NewMovie from "./MovieList/newMovie";
 import Movielisting from "./MovieList/movielisiting";
