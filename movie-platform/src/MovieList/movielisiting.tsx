@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,15 +14,16 @@ import {
   Typography,
 } from "@mui/material";
 
-import Grid from '@mui/material/Grid2';
+import Grid from "@mui/material/Grid2";
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 
-
-
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { updateMovieRequest, deleteMovieRequest, showMovieRequest, } from '../redux/movieSlices';
-
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import {
+  updateMovieRequest,
+  deleteMovieRequest,
+  showMovieRequest,
+} from "../redux/movieSlices";
 
 interface Movies {
   id?: number;
@@ -39,59 +39,32 @@ interface Movies {
 const Movielisting: React.FC = () => {
   const { id } = useParams();
   const [movies, setMovies] = useState<Movies>({});
-   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editData, setEditData] = useState<Movies>({});
   const navigate = useNavigate();
   const { movieazeez } = useSelector((state: RootState) => state.movies);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-   dispatch(showMovieRequest({ id: Number(id) }));
-    
-  
-    // const fetchMovies = async () => {
-
-    //   try {
-    //     const response = await axios.get(
-    //       `http://127.0.0.1:8000/api/movieslisting/${id}`
-    //     );
-    //     setMovies(response.data);
-    //   } catch (error) {
-    //     console.log("Failed to fetch movies", error);
-    //   }
-    // };
-
-    // fetchMovies();
+    dispatch(showMovieRequest({ id: Number(id) }));
 
     const loggedIn = localStorage.getItem("Token");
     if (loggedIn) {
       setIsLoggedIn(true);
     }
-  }, [dispatch,id]);
-
+  }, [dispatch, id]);
 
   /////////
 
   const handleDelete = () => {
     dispatch(deleteMovieRequest({ id: Number(id) }));
     navigate("/");
-
-    // if (isLoggedIn) {
-    //   axios
-    //     .delete(`http://127.0.0.1:8000/api/movieslisting/${id}`)
-    //     .then(() => {
-    //       navigate("/");
-    //     })
-    //     .catch((err) => {
-    //       console.log("Failed to delete", err);
-    //     });
-    // }
   };
 
   const handleEditOpen = () => {
     if (isLoggedIn) {
-      setEditData( movieazeez);
+      setEditData(movieazeez);
       setModalOpen(true);
     }
   };
@@ -103,17 +76,7 @@ const Movielisting: React.FC = () => {
   const handleEditSave = async () => {
     dispatch(updateMovieRequest({ id: Number(id), data: editData }));
     setMovies(editData);
-      setModalOpen(false);
-    // try {
-    //   await axios.put(
-    //     `http://127.0.0.1:8000/api/movieslisting/${id}`,
-    //     editData
-    //   );
-                      //   setMovies(editData);
-                      //   setModalOpen(false);
-    // } catch (error) {
-    //   console.log("Failed to update movie", error);
-    // }
+    setModalOpen(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,7 +107,7 @@ const Movielisting: React.FC = () => {
         <ArrowBackIosOutlinedIcon />
       </IconButton>
 
-      <Grid size={{xs:12,sm:10,md:8}} >
+      <Grid size={{ xs: 12, sm: 10, md: 8 }}>
         <Box
           sx={{
             p: 8,
@@ -154,21 +117,37 @@ const Movielisting: React.FC = () => {
             mb: 2,
             width: "450px",
           }}
-        >  
-          <Typography variant="h6">Title:   <span style={{color:'blue'}}>{movieazeez.title}</span></Typography>
-          <Typography variant="h6">Director:  <span style={{color:'blue'}}> {movieazeez.director}</span></Typography>
-          <Typography variant="h6">Hero:   <span style={{color:'blue'}}> {movieazeez.hero}</span></Typography>
-          <Typography variant="h6">Heroine:   <span style={{color:'blue'}}> {movieazeez.herione}</span></Typography>
+        >
           <Typography variant="h6">
-            Music Director:  <span style={{color:'blue'}}> {movieazeez.music_director}</span>
+            Title: <span style={{ color: "blue" }}>{movieazeez.title}</span>
           </Typography>
-          <Typography variant="h6">Rating:  <span style={{color:'blue'}}> {movieazeez.rating}/100 </span></Typography>
-          <Typography variant="body1">Story:   <span style={{color:'blue'}}> {movieazeez.story}</span></Typography>
+          <Typography variant="h6">
+            Director:{" "}
+            <span style={{ color: "blue" }}> {movieazeez.director}</span>
+          </Typography>
+          <Typography variant="h6">
+            Hero: <span style={{ color: "blue" }}> {movieazeez.hero}</span>
+          </Typography>
+          <Typography variant="h6">
+            Heroine:{" "}
+            <span style={{ color: "blue" }}> {movieazeez.herione}</span>
+          </Typography>
+          <Typography variant="h6">
+            Music Director:{" "}
+            <span style={{ color: "blue" }}> {movieazeez.music_director}</span>
+          </Typography>
+          <Typography variant="h6">
+            Rating:{" "}
+            <span style={{ color: "blue" }}> {movieazeez.rating}/100 </span>
+          </Typography>
+          <Typography variant="body1">
+            Story: <span style={{ color: "blue" }}> {movieazeez.story}</span>
+          </Typography>
         </Box>
       </Grid>
 
       {isLoggedIn && (
-        <Grid size={{xs:12,sm:10,md:8}}>
+        <Grid size={{ xs: 12, sm: 10, md: 8 }}>
           <Button
             onClick={handleEditOpen}
             variant="contained"
@@ -255,4 +234,3 @@ const Movielisting: React.FC = () => {
 };
 
 export default Movielisting;
-

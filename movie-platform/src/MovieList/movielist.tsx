@@ -20,20 +20,7 @@ import { fetchMoviesRequest } from "../redux/movieSlices";
   useEffect(() => {
     dispatch(fetchMoviesRequest());
 
-    // const fetchMovies = async () => {
-    //   try {
-    //     const response = await axios.get(
-    //       "http://127.0.0.1:8000/api/movieslisting"
-    //     );
-    //     console.log("answer");
-    //     setCut(response.data);
-    //     return response.data;
-    //   } catch (error) {
-    //     console.log("Failed to fetch movies", error);
-    //   }
-    // };
-
-    // fetchMovies();
+   
     const logg̥edIN = localStorage.getItem("Token");
     console.log("🚀 ~ useEffect ~ logg̥edIN:", logg̥edIN);
     if (logg̥edIN) {
