@@ -1,16 +1,15 @@
 import Box from "@mui/material/Box";
 import { Button, TextField, Typography,Snackbar,Alert } from "@mui/material";
-import { useState,useEffect } from "react";
+import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid2';
 
 
- import { useDispatch, useSelector } from 'react-redux';
-// import { signupRequest } from '../redux/authSlices';
+ import { useDispatch} from 'react-redux';
 import { signupRequest } from "../redux/authSlice";
-import { RootState } from "../redux/store";
-import axios from "axios";
+// import { RootState } from "../redux/store";
+// import axios from "axios";
 
 
 
@@ -18,15 +17,15 @@ export const Signup: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [c_password, setC_password] = useState<string>("");
+  const [c_password, setC_password] = useState<string>("");                                           
 
   const [open,setOpen] = useState<boolean>(false);
-  const [openError, setErrorOpen] = useState<boolean>(false);
+  // const [openError, setErrorOpen] = useState<boolean>(false);
 
 
   const navigate = useNavigate();
   const dispatch=useDispatch();
-  const { loading, error, Token } = useSelector((state: RootState) => state.auth);
+  // const { loading, error, Token } = useSelector((state: RootState) => state.auth);
 
 
 
@@ -97,13 +96,13 @@ export const Signup: React.FC = () => {
 
      if(!newErrors.name && !newErrors.email && !newErrors.password && !newErrors.c_password){
       //localStorage.setItem("Token",response.data.tokenNmae);
-      dispatch(signupRequest({ name, email, password, c_password }));
+      dispatch(signupRequest({ name, email, password, c_password ,navigate}));
      console.log("signup local");
     setOpen(true);
-    setTimeout(()=>{
-      dispatch(signupRequest({ name, email, password, c_password }));
-      navigate('/');
-    },1500);
+    // setTimeout(()=>{
+    //   dispatch(signupRequest({ name, email, password, c_password }));
+    //   navigate('/');
+    // },1500);
      
      }else{
       console.log("error failed")

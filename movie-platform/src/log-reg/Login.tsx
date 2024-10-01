@@ -1,5 +1,4 @@
 import { useState } from "react";
- import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -14,8 +13,8 @@ import Grid from "@mui/material/Grid2";
 
 
 
-//import { useDispatch } from 'react-redux';
-//import {  loginRequest } from '../redux/authSlices';
+import { useDispatch } from 'react-redux';
+import {  loginRequest} from '../redux/authSlice';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -28,7 +27,7 @@ export const Login: React.FC = () => {
   const [passwordedit, setPasswordedit] = useState<string>("");
 
   const navigate = useNavigate();
-  //const dispatch=useDispatch();
+  const dispatch=useDispatch();
 
   const validateEmail = (email: string) => {
     if (!email) {
@@ -50,20 +49,21 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleLogin = () => {
-    validateEmail(email);
-    validatePassword(password);
-    if (!emailedit && !passwordedit) {
-      dispatch(loginRequest({ email, password }));
-      // localStorage.setItem("Token", Response.data.tokenNmae);
-      setOpen(true);
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-    }else{
-      // console.log("error failed", error);
-      setErrorOpen(true);
 
+
+
+  const handleLogin =() => {
+    if (!emailedit && !passwordedit) {
+           //localStorage.setItem("Token", Response.data.tokenNmae);
+    dispatch(loginRequest({email,password}));
+    setOpen(true);
+    console.log('1st handle wirking');
+      
+    }else{
+      console.log("error failed");
+      setErrorOpen(true);
+      setOpen(false);
+   
     }
   };
 
@@ -174,7 +174,7 @@ export const Login: React.FC = () => {
             fullWidth
             variant="contained"
             color="success"
-            onClick={handleLogin}
+            onClick={()=>handleLogin(email,password)}
             sx={{ mb: 2 }}
           >
             Login

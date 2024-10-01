@@ -6,8 +6,7 @@ import {Login} from "./log-reg/Login";
 import Movielist from "./MovieList/movielist";
 import NewMovie from "./MovieList/newMovie";
 import Movielisting from "./MovieList/movielisiting";
-// import { Counter } from "./Counter";
-// import Parent from "./parnet/parent";
+
 
 function App() {
  
@@ -22,10 +21,6 @@ function App() {
           <Route path="/new-movie/:id" element={<Movielisting />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Signup />} />
-          {/* without redux */}
-          {/* <Route path="/parent" element={<Parent />} /> */}
-          {/* with redux */}
-          {/* <Route path="/counter" element={<Counter />} /> */}
         </Routes>
       </Router>
     </>
