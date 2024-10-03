@@ -38,7 +38,7 @@ interface Movies {
 
 const Movielisting: React.FC = () => {
   const { id } = useParams();
-  const [movies, setMovies] = useState<Movies>({});
+  const [, setMovies] = useState<Movies>({});
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editData, setEditData] = useState<Movies>({});
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ const Movielisting: React.FC = () => {
 
   const handleEditOpen = () => {
     if (isLoggedIn) {
-      setEditData(movieazeez);
+      setEditData((movieazeez as Movies));
       setModalOpen(true);
     }
   };
@@ -119,29 +119,29 @@ const Movielisting: React.FC = () => {
           }}
         >
           <Typography variant="h6">
-            Title: <span style={{ color: "blue" }}>{movieazeez.title}</span>
+            Title: <span style={{ color: "blue" }}>{(movieazeez as Movies).title}</span>
           </Typography>
           <Typography variant="h6">
             Director:{" "}
-            <span style={{ color: "blue" }}> {movieazeez.director}</span>
+            <span style={{ color: "blue" }}> {(movieazeez as Movies).director}</span>
           </Typography>
           <Typography variant="h6">
-            Hero: <span style={{ color: "blue" }}> {movieazeez.hero}</span>
+            Hero: <span style={{ color: "blue" }}> {(movieazeez as Movies).hero}</span>
           </Typography>
           <Typography variant="h6">
             Heroine:{" "}
-            <span style={{ color: "blue" }}> {movieazeez.herione}</span>
+            <span style={{ color: "blue" }}> {(movieazeez as Movies).herione}</span>
           </Typography>
           <Typography variant="h6">
             Music Director:{" "}
-            <span style={{ color: "blue" }}> {movieazeez.music_director}</span>
+            <span style={{ color: "blue" }}> {(movieazeez as Movies).music_director}</span>
           </Typography>
           <Typography variant="h6">
             Rating:{" "}
-            <span style={{ color: "blue" }}> {movieazeez.rating}/100 </span>
+            <span style={{ color: "blue" }}> {(movieazeez as Movies).rating}/100 </span>
           </Typography>
           <Typography variant="body1">
-            Story: <span style={{ color: "blue" }}> {movieazeez.story}</span>
+            Story: <span style={{ color: "blue" }}> {(movieazeez as Movies).story}</span>
           </Typography>
         </Box>
       </Grid>
@@ -222,7 +222,7 @@ const Movielisting: React.FC = () => {
             onChange={handleChange}
           />
         </DialogContent>
-        <DialogActions>
+        <DialogActions >
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleEditSave} color="primary">
             Save

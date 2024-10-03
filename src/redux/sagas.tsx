@@ -16,7 +16,7 @@ import {
 } from "./movieSlices";
 
 //Fetch movies saga        movielist
-function* fetchMoviesSaga() {
+function* fetchMoviesSaga(): Generator {
   try {
     const response = yield call(
       axios.get,
@@ -24,7 +24,7 @@ function* fetchMoviesSaga() {
     );
     yield put(fetchMoviesSuccess(response.data));
   } catch (error) {
-    yield put(fetchMoviesFailure(error.message));
+    yield put(fetchMoviesFailure((error as Error).message));
   }
 }
 
@@ -61,13 +61,13 @@ function* updateMovieSaga(action: { payload: { id: unknown; data: unknown } }) {
 function* deleteMovieSaga(action: { payload: { id: unknown } }) {
   try {
     const { id } = action.payload;
-    const response = yield call(
+     yield call(
       axios.delete,
       `http://127.0.0.1:8000/api/movieslisting/${id}`
     );
-    yield put(deleteMovieSuccess(response.id));
+    yield put(deleteMovieSuccess(id));
   } catch (error) {
-    yield put(deleteMovieFailure(error.message));
+    yield put(deleteMovieFailure((error as Error).message));
   }
 }
 

@@ -46,7 +46,7 @@ const moviesSlice = createSlice({
     },
 
     // Update movie actions
-    updateMovieRequest(state) {
+    updateMovieRequest(state, action: PayloadAction<{ id: number; data: Movies }>) {
       state.loading = true;
     },
     updateMovieSuccess(state, action: PayloadAction<Movies>) {
@@ -59,12 +59,13 @@ const moviesSlice = createSlice({
     },
 
     // Delete movie actions
-    deleteMovieRequest(state) {
+    deleteMovieRequest(state, action: PayloadAction<{ id: number }>) {
       state.loading = true;
+      state.error = null;
     },
-    deleteMovieSuccess(state) {
+    deleteMovieSuccess(state, action: PayloadAction<number>) {
       state.loading = false;
-      state.movieazeez ={};
+      state.movieazeez =action.payload ; //{}
     },
     deleteMovieFailure(state, action: PayloadAction<string>) {
       state.loading = false;
@@ -72,8 +73,9 @@ const moviesSlice = createSlice({
     },
 
     // Show movie actions
-    showMovieRequest(state) {
+    showMovieRequest(state, action: PayloadAction<{ id: number }>) {
       state.loading = true;
+      state.error = null;
     },
     showMovieSuccess(state, action: PayloadAction<Movies>) {
       state.loading = false;
