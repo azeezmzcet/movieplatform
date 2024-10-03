@@ -162,7 +162,7 @@ export const Signup: React.FC = () => {
             error={errors.password}
             helperText={
               errors.password
-                ? "Password must be at least 6 characters long"
+                ? "Password must be at least 6characters long"
                 : ""
             }
           />
