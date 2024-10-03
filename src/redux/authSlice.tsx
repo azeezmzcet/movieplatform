@@ -1,10 +1,10 @@
 // authSlice.ts
-import { createSlice,  PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
   loading: boolean;
-  error: string | null;
-  token: string | null;
+  error: string | null | unknown;
+  token: string | null | unknown;
 }
 
 const initialState: AuthState = {
@@ -18,25 +18,28 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginRequest(state) {
-        state.loading = true;
-        state.error = null;
-        
-      },
-      loginSuccess(state, action: PayloadAction<{ token: string }>) {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.error = null;
-      },
-      loginFailure(state, action: PayloadAction<{ error: string }>) {
-        state.loading = false;
-        state.error = action.payload.error;
+      state.loading = true;
+      state.error = null;
     },
-    signupRequest: (state) => {
+    loginSuccess(state, action: PayloadAction<{ token: string }>) {
+      state.loading = false;
+      state.token = action.payload.token;
+      state.error = null;
+    },
+    loginFailure(state, action: PayloadAction<{ error: unknown }>) {
+      state.loading = false;
+      state.error = action.payload.error;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    signupRequest: (state, _action) => {
       state.loading = true;
     },
-    signupSuccess: (state, action: PayloadAction<string>) => {
+    signupSuccess: (
+      state,
+      action: PayloadAction<{ token: unknown | string }>
+    ) => {
       state.loading = false;
-      state.token = action.payload;
+      state.token = action.payload.token;
     },
     signupFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -45,6 +48,13 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginRequest, loginSuccess, loginFailure, signupRequest, signupSuccess, signupFailure } = authSlice.actions;
+export const {
+  loginRequest,
+  loginSuccess,
+  loginFailure,
+  signupRequest,
+  signupSuccess,
+  signupFailure,
+} = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import {
   loginRequest,
   loginSuccess,
@@ -10,34 +10,39 @@ import {
 } from "./authSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-
-
-interface LoginResponse {
-  tokenNmae: string; 
-  
-}
+// interface LoginResponse {
+//   tokenNmae: string;
+// }
 
 // Login saga
-function* loginSaga(action:PayloadAction <{email:string ; password:string}> ):Generator {
+function* loginSaga(
+  action: PayloadAction<{ email: string; password: string }>
+): Generator {
   try {
-    const response : AxiosResponse<LoginResponse> = yield call(axios.post, "http://127.0.0.1:8000/api/login", {
-      email: action.payload.email,
-      password: action.payload.password,
-    });
+    const response: unknown = yield call(
+      axios.post,
+      "http://127.0.0.1:8000/api/login",
+      {
+        email: action.payload.email,
+        password: action.payload.password,
+      }
+    );
     yield put(loginSuccess({ token: response.data.tokenNmae }));
     localStorage.setItem("Token", response.data.tokenNmae);
     window.location.replace("/"); //only things is to navigate homepage
-  } catch (error:unknown) {
+  } catch (error: unknown) {
     yield put(
-      loginFailure({error: "Login failed. Please check email and password" , error })
+      loginFailure({
+        error,
+      })
     );
   }
 }
 
 // Signup saga
-function* signupSaga(action: ReturnType<typeof signupRequest>) {
+function* signupSaga(action: ReturnType<typeof signupRequest>): Generator {
   try {
-    const response = yield call(
+    const response: unknown = yield call(
       axios.post,
       "http://127.0.0.1:8000/api/register",
       {
@@ -48,11 +53,19 @@ function* signupSaga(action: ReturnType<typeof signupRequest>) {
       }
     );
 
-    yield put(signupSuccess({ token: response.data.tokenNmae }));
-    localStorage.setItem("Token", response.data.tokenNmae);
+    yield put(signupSuccess({ token: response }));
+    // localStorage.setItem("Token", response.data.tokenNmae);
     window.location.replace("/"); //only things is to navigate homepage
   } catch (error: unknown) {
-    yield put(signupFailure(error.response?.data?.message || "Signup failed",error));
+    if (axios.isAxiosError(error)) {
+      // Handle known Axios error
+      yield put(
+        signupFailure(error.response?.data?.message || "Signup failed")
+      );
+    } else {
+      // Handle unknown error types
+      yield put(signupFailure("An unknown error occurred during signup"));
+    }
   }
 }
 
