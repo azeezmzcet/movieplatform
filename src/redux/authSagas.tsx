@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   loginRequest,
   loginSuccess,
@@ -47,9 +47,14 @@ function* loginSaga(
 }
 
 // Signup saga
-function* signupSaga(action: ReturnType<typeof signupRequest>): Generator {
+function* signupSaga(action: ReturnType<typeof signupRequest>) {
+  interface TokenTypeee {
+    tokenNmae: string;
+    toknType: string ;
+  }
+
   try {
-    const response: unknown = yield call(
+    const response : AxiosResponse<TokenTypeee> = yield call(
       axios.post,
       "http://127.0.0.1:8000/api/register",
       {
@@ -60,8 +65,8 @@ function* signupSaga(action: ReturnType<typeof signupRequest>): Generator {
       }
     );
 
-    yield put(signupSuccess({ token: response }));
-    // localStorage.setItem("Token", response.data.tokenNmae);
+    yield put(signupSuccess({ token: response.data.tokenNmae }));
+    localStorage.setItem("Token", response.data.tokenNmae);
     window.location.replace("/"); //only things is to navigate homepage
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

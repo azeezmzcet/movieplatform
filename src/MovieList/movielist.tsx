@@ -11,7 +11,7 @@ import { fetchMoviesRequest } from "../redux/movieSlices";
 
   const Movielist: React.FC = () => {
   const dispatch = useDispatch();
-  const { movies } = useSelector((state: RootState) => state.movies);
+  const { movies, loading } = useSelector((state: RootState) => state.movies);
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [moviesPerPage] = useState<number>(9);
@@ -104,7 +104,9 @@ import { fetchMoviesRequest } from "../redux/movieSlices";
         </header>
       </div>
 
-      
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
         <Box
           sx={{
             width: "800px",
@@ -154,7 +156,7 @@ import { fetchMoviesRequest } from "../redux/movieSlices";
 
           <div></div>
         </Box>
-      
+      )}
 
       <Stack
         spacing={2}

@@ -70,7 +70,7 @@ const moviesSlice = createSlice({
      
     deleteMovieSuccess(state, action: PayloadAction<{ id: number }>) {
       state.loading = false;
-      state.movieazeez =action.payload ; // //
+      state.movieazeez =action.payload ; //
     },
     deleteMovieFailure(state, action: PayloadAction<string>) {
       state.loading = false;
