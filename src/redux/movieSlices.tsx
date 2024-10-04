@@ -80,7 +80,7 @@ const moviesSlice = createSlice({
     // Show movie actions
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showMovieRequest(state, _action: PayloadAction<{ id: number }>) {
-      state.loading = false;
+      state.loading = true;
       state.error = null;
     },
     showMovieSuccess(state, action: PayloadAction<Movies>) {
