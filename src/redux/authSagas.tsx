@@ -17,9 +17,14 @@ import { PayloadAction } from "@reduxjs/toolkit";
 // Login saga
 function* loginSaga(
   action: PayloadAction<{ email: string; password: string }>
-): Generator {
+) {
+  interface TokenType {
+    tokenNmae: string;
+    toknType: string;
+  }
+
   try {
-    const response: unknown = yield call(
+    const response: { data: TokenType } = yield call(
       axios.post,
       "http://127.0.0.1:8000/api/login",
       {
@@ -27,9 +32,11 @@ function* loginSaga(
         password: action.payload.password,
       }
     );
+    console.log("login saga ", response);
+
     yield put(loginSuccess({ token: response.data.tokenNmae }));
     localStorage.setItem("Token", response.data.tokenNmae);
-    window.location.replace("/"); //only things is to navigate homepage
+     window.location.replace("/"); //only things is to navigate homepage
   } catch (error: unknown) {
     yield put(
       loginFailure({

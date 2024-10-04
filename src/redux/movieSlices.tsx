@@ -27,7 +27,7 @@ const initialState: MovieState = {
   loading: false,
   error: null,
 };
-
+ 
 const moviesSlice = createSlice({
   name: "movies",
   initialState,
@@ -38,7 +38,8 @@ const moviesSlice = createSlice({
     },
     fetchMoviesSuccess(state, action: PayloadAction<Movies[]>) {
       state.loading = false;
-      state.movies = action.payload;
+       state.movies = action.payload;
+     
     },
     fetchMoviesFailure(state, action: PayloadAction<string>) {
       state.loading = false;
@@ -46,7 +47,8 @@ const moviesSlice = createSlice({
     },
 
     // Update movie actions
-    updateMovieRequest(state, action: PayloadAction<{ id: number; data: Movies }>) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    updateMovieRequest(state, _action: PayloadAction<{ id: number; data: Movies }>) {
       state.loading = true;
     },
     updateMovieSuccess(state, action: PayloadAction<Movies>) {
@@ -59,13 +61,16 @@ const moviesSlice = createSlice({
     },
 
     // Delete movie actions
-    deleteMovieRequest(state, action: PayloadAction<{ id: number }>) {
+  
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    deleteMovieRequest(state, _action: PayloadAction<{ id: number }>) {  
       state.loading = true;
       state.error = null;
     },
-    deleteMovieSuccess(state, action: PayloadAction<number>) {
+     
+    deleteMovieSuccess(state, action: PayloadAction<{ id: number }>) {
       state.loading = false;
-      state.movieazeez =action.payload ; //{}
+      state.movieazeez =action.payload ; // //
     },
     deleteMovieFailure(state, action: PayloadAction<string>) {
       state.loading = false;
@@ -73,13 +78,15 @@ const moviesSlice = createSlice({
     },
 
     // Show movie actions
-    showMovieRequest(state, action: PayloadAction<{ id: number }>) {
-      state.loading = true;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    showMovieRequest(state, _action: PayloadAction<{ id: number }>) {
+      state.loading = false;
       state.error = null;
     },
     showMovieSuccess(state, action: PayloadAction<Movies>) {
       state.loading = false;
       state.movieazeez = action.payload;
+     
     },
     showMovieFailure(state, action: PayloadAction<string>) {
       state.loading = false;

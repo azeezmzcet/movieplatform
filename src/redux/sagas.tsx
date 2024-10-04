@@ -14,11 +14,35 @@ import {
   showMovieSuccess,
   showMovieFailure,
 } from "./movieSlices";
+import { PayloadAction } from "@reduxjs/toolkit";
+
+
+
+interface Movie {
+  id: number;
+  title: string;
+  director: string;
+  hero: string;
+  herione: string | null;
+  music_director: string | null;
+  rating: string | null;
+  story: string | null;
+  }
+
+interface MoviesResponse {
+  data: Movie[];
+}
+
+
+interface MovieResponse {
+  data: Movie;
+}
+
 
 //Fetch movies saga        movielist
-function* fetchMoviesSaga(): Generator {
+function* fetchMoviesSaga(): Generator<unknown, void, MoviesResponse> {
   try {
-    const response = yield call(
+    const response: MoviesResponse = yield call(
       axios.get,
       "http://127.0.0.1:8000/api/movieslisting"
     );
@@ -29,21 +53,21 @@ function* fetchMoviesSaga(): Generator {
 }
 
 // Show movie (fetch movie by ID)
-function* showMovieSaga(action: { payload: { id: unknown } }) {
+function* showMovieSaga(action: PayloadAction<{ id: number | unknown }>):Generator<unknown, void, MovieResponse> {
   try {
     const { id } = action.payload;
-    const response = yield call(
+    const response: MovieResponse = yield call(
       axios.get,
       `http://127.0.0.1:8000/api/movieslisting/${id}`
     );
     yield put(showMovieSuccess(response.data));
   } catch (error) {
-    yield put(showMovieFailure(error.message));
+    yield put(showMovieFailure((error as Error).message));
   }
 }
 
 // Update movie saga     movilstiing
-function* updateMovieSaga(action: { payload: { id: unknown; data: unknown } }) {
+function* updateMovieSaga(action: PayloadAction<{ id: number ; data: unknown | string }>):Generator<unknown, void, MovieResponse> {
   try {
     const { id, data } = action.payload;
     const response = yield call(
@@ -53,27 +77,27 @@ function* updateMovieSaga(action: { payload: { id: unknown; data: unknown } }) {
     );
     yield put(updateMovieSuccess(response.data));
   } catch (error) {
-    yield put(updateMovieFailure(error.message));
+    yield put(updateMovieFailure((error as Error).message));
   }
 }
 
 // Delete movie saga    movielisting
-function* deleteMovieSaga(action: { payload: { id: unknown } }) {
+function* deleteMovieSaga(action: PayloadAction<{ id: number }>) {
   try {
     const { id } = action.payload;
      yield call(
       axios.delete,
       `http://127.0.0.1:8000/api/movieslisting/${id}`
     );
-    yield put(deleteMovieSuccess(id));
+    yield put(deleteMovieSuccess({id:Number(id)}));
   } catch (error) {
     yield put(deleteMovieFailure((error as Error).message));
   }
 }
 
 export function* watchFetchMovies() {
-  yield takeLatest(fetchMoviesRequest.type, fetchMoviesSaga);
   yield takeLatest(showMovieRequest.type, showMovieSaga);
+  yield takeLatest(fetchMoviesRequest.type, fetchMoviesSaga);
   yield takeLatest(updateMovieRequest.type, updateMovieSaga);
   yield takeLatest(deleteMovieRequest.type, deleteMovieSaga);
 }

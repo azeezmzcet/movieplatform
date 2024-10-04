@@ -52,10 +52,13 @@ export const Login: React.FC = () => {
 
 
 
-  const handleLogin =(email: string, password: string) => {
+  const handleLogin =(email: string | unknown, password: string | unknown) => {
     if (!emailedit && !passwordedit) {
            
-    dispatch(loginRequest({email,password}));
+    dispatch(loginRequest({
+      email, password,
+      token: undefined
+    }));
     setOpen(true);
     console.log('1st handle wirking');
       

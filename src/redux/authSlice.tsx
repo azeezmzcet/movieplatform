@@ -17,11 +17,13 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginRequest(state) {
+     
+    loginRequest(state, action: PayloadAction<{ token: string | unknown , email: string | unknown ; password : string | unknown }>) {
       state.loading = true;
       state.error = null;
+     state.token = action.payload.token;
     },
-    loginSuccess(state, action: PayloadAction<{ token: string }>) {
+    loginSuccess(state, action: PayloadAction<{ token: string | unknown  }>) {
       state.loading = false;
       state.token = action.payload.token;
       state.error = null;

@@ -87,7 +87,7 @@ const Movielisting: React.FC = () => {
     navigate("/");
   };
 
-  if (Object.keys(movieazeez).length === 0) return <div>Loading...</div>;
+  // if (Object.keys(movieazeez).length === 0) return <div>Loading...</div>;
 
   return (
     <Box sx={{ p: 2 }}>
